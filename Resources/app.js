@@ -1,4 +1,6 @@
-var window = Ti.UI.createWindow();
+var window = Ti.UI.createWindow({
+	backgroundColor: "#000000"
+});
 var view = Ti.UI.createView({
 	backgroundColor: "#ffffff",
 	height: 300
@@ -42,7 +44,7 @@ Ti.Accelerometer.addEventListener("update", function(e){
 Ti.Gesture.addEventListener('shake',function(e){
 	//world.dealloc();
 	//world = box2d.createWorld(view);
-	Ti.API.info(bodies.length);
+	//Ti.API.info(bodies.length);
 	for(var i = 0; i<=bodies.length;i++){
 		//Ti.API.info(bodies[i]);
 		//world.removeBody(bodies[i]);
@@ -71,7 +73,7 @@ function randomColor(){
 
 function randomColor2(){
 	var icolor = Math.round(Math.random() * 1);
-	Ti.API.info(icolor);
+	//Ti.API.info(icolor);
 	var acolor = ["#000000","#ffffff"];
 	var color = acolor[icolor];
 	return color;
@@ -116,18 +118,19 @@ view.addEventListener("click",function(e){
 Ti.Gesture.addEventListener('orientationchange', function(e) {
 	if (e.orientation == Titanium.UI.LANDSCAPE_LEFT) {
 		view.backgroundColor = "#000000";
+		window.backgroundColor = "#ffffff";
 		world.setGravity(9.91, 0);
 	} else if (e.orientation == Titanium.UI.LANDSCAPE_RIGHT) {
 		view.backgroundColor = "#000000";
-
+		window.backgroundColor = "#ffffff";
 		world.setGravity(-9.91, 0);
 	} else if (e.orientation == Titanium.UI.UPSIDE_PORTRAIT) {
 		view.backgroundColor = "#ffffff";
-
+		window.backgroundColor = "#000000";
 		world.setGravity(0, 9.91);
 	} else if (e.orientation == Titanium.UI.PORTRAIT) {
 		view.backgroundColor = "#ffffff";
-
+		window.backgroundColor = "#000000";
 		world.setGravity(0, -9.91);
 	}
 });
