@@ -29,28 +29,50 @@ function createSprite(){
 		backgroundColor: color
 	});
 	
+	
 	var b = world.addBody(box, {
 		density: 4,
 		restitution: Math.random()
 	});
 	
+	
+	
+	//world.removeBody(b.body);
 	bodies.push(b);
 }
+
+var base = Ti.UI.createView({
+		height: 50,
+		bottom: 0,
+		left: 0,
+		backgroundColor: "red"
+	});
+
+//view.add(base);
+var baseBody = world.addBody(base,{
+	density: 100, 
+	restitution: 0,
+	type: 'static'
+	});
+
+//Ti.API.log(baseBody.getPosition());
 
 Ti.Accelerometer.addEventListener("update", function(e){
 	world.setGravity(e.x * 9.81, e.y * 9.81);
 });
 
-Ti.Gesture.addEventListener('shake',function(e){
-	//world.dealloc();
-	//world = box2d.createWorld(view);
-	//Ti.API.info(bodies.length);
+ Ti.Gesture.addEventListener('shake',function(e){
+	// //world.dealloc();
+	// //world = box2d.createWorld(view);
+	Ti.API.info(bodies.length);
 	for(var i = 0; i<=bodies.length;i++){
-		//Ti.API.info(bodies[i]);
-		//world.removeBody(bodies[i]);
+		var b = bodies[i];
+		// //Ti.API.info(.body());
+		// //Ti.API.info(b.getLocalCenter());
+		world.removeBody(b);
 	}
-	//bodies = [];
-	Ti.Media.vibrate();
+	// //bodies = [];
+	// //Ti.Media.vibrate();
 });
 // world.addEventListener("collision",function(e){
 	// Ti.API.info("collision between: " + e.a + " -> " +e.b + " -> phase: "+e.phase);
@@ -78,22 +100,40 @@ function randomColor2(){
 	var color = acolor[icolor];
 	return color;
 }
-view.addEventListener("click",function(e){
-	
-	//var tcolor = "#000000";
-	var tcolor = randomColor2();
+base.addEventListener("click",function(e){
+	Ti.API.info('create -> ');
+	var tcolor = "#000000";
+	//var tcolor = randomColor2();
 	var box = Ti.UI.createView({
 		width: 50,
 		height: 50,
 		center: {x:e.x,y:e.y},
 		backgroundColor: tcolor
 	});
-	
+
+	box.addEventListener("click",function(e){
+		Ti.API.info(e.x + ' -> '+ e.y);
+	});
+
+	var player = Ti.UI.createView({
+		width: 25,
+		height: 25,
+		center: {x:e.x,y:e.y - 25},
+		backgroundColor: 'blue'
+	});
+
 	var b = world.addBody(box, {
 		density: 4,
 		restitution: Math.random()
 	});
-	bodies.push(b);
+	
+	var a = world.addBody(player, {
+		density: 4,
+		restitution: 100
+	});
+		
+	//bodies.push(b);
+	//world.removeBody(b.body);
 });
 // create a block 
 // var redBlock = Ti.UI.createView({
@@ -135,14 +175,21 @@ Ti.Gesture.addEventListener('orientationchange', function(e) {
 	}
 });
 
-// world.addEventListener("collision", function(e) {
+world.addEventListener("collision", function(e) {
 	// if ((e.a == redBodyRef || e.b == redBodyRef) && e.phase == "begin") {
-		// Ti.API.info("the red block collided with something");
+		//Ti.API.info("the red block collided with something");
+		//Ti.API.info(e.phase);
+		if (e.phase == "begin" && e.a == baseBody){
+			world.removeBody(e.b);	
+		}
+		//Ti.API.info(e.a);
+		//Ti.API.info(e.b);
+
 // 
 		// Ti.API.info(JSON.stringify(e));
 		// Ti.Media.vibrate();
 	// }
-// });
+});
 
 // start the world
 world.start();
